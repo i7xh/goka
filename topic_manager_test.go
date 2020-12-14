@@ -26,7 +26,6 @@ func createTopicManager(t *testing.T) (*topicManager, *builderMock, *gomock.Cont
 	ctrl := NewMockController(t)
 	bm := newBuilderMock(ctrl)
 	return &topicManager{
-		brokers:            tmTestBrokers,
 		broker:             bm.broker,
 		client:             bm.client,
 		topicManagerConfig: NewTopicManagerConfig(),
@@ -114,7 +113,6 @@ func TestTM_newTopicManager(t *testing.T) {
 
 		tm, err := newTopicManager(tmTestBrokers, DefaultConfig(), NewTopicManagerConfig(), bm.client, trueCheckFunc)
 		test.AssertNil(t, err)
-		test.AssertEqual(t, tm.brokers, tmTestBrokers)
 		test.AssertEqual(t, tm.client, bm.client)
 		test.AssertEqual(t, tm.broker, broker)
 	})

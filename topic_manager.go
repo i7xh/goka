@@ -31,7 +31,7 @@ type TopicManager interface {
 }
 
 type topicManager struct {
-	brokers            []string
+	admin              sarama.ClusterAdmin
 	broker             Broker
 	client             sarama.Client
 	topicManagerConfig *TopicManagerConfig
@@ -66,8 +66,13 @@ func newTopicManager(brokers []string, saramaConfig *sarama.Config, topicManager
 		return nil, err
 	}
 
+	admin, err := sarama.NewClusterAdminFromClient(client)
+	if err != nil {
+		return nil, fmt.Errorf("error creating cluster admin: %v", err)
+	}
+
 	return &topicManager{
-		brokers:            brokers,
+		admin:              admin,
 		client:             client,
 		broker:             broker,
 		topicManagerConfig: topicManagerConfig,
